@@ -58,8 +58,38 @@ genotypeFactor = struct('var', [], 'card', [], 'val', []);
 
 % Fill in genotypeFactor.var.  This should be a 1-D row vector.
 % Fill in genotypeFactor.card.  This should be a 1-D row vector.
+genotypeNum = size(genotypesToAlleles, 1);
+
+genotypeFactor.var = [genotypeVarChild, genotypeVarParentOne, genotypeVarParentTwo];
+genotypeFactor.card = [genotypeNum, genotypeNum, genotypeNum];
 
 genotypeFactor.val = zeros(1, prod(genotypeFactor.card));
 % Replace the zeros in genotypeFactor.val with the correct values.
 
+for j = 1:prod(genotypeFactor.card),
+	assigment = IndexToAssignment(j, genotypeFactor.card);
+	child_ass = genotypesToAlleles(assigment(1),:);
+	child_par1 = genotypesToAlleles(assigment(2),:);
+	child_par2 = genotypesToAlleles(assigment(3),:);
+	possible_child = zeros(length(child_par1) * length(child_par1), 2);
+	possible_child_genotype = zeros(length(child_par1) * length(child_par1), 1);
+	c = 1;
+	for p1 = 1:length(child_par1),
+		for p2 = 1:length(child_par2),
+			possible_child(c,:) = sort([child_par1(p1), child_par2(p2)]);
+			possible_child_genotype(c) = allelesToGenotypes(possible_child(c,1), possible_child(c,2));
+			c = c + 1; 
+		end;
+	end;
+	%child_par1
+	%child_par2
+	pp = struct('c1',child_par1 , 'c2',child_par2, 'possible_child', possible_child,'possible_child_genotype', possible_child_genotype);
+	%allelesToGenotypes%(possible_child)
+	allelesToGenotypes(child_ass(1),child_ass(2));
+	mismatchGeno = possible_child_genotype - allelesToGenotypes(child_ass(1),child_ass(2));
+	mismatchNum = length(find(mismatchGeno));
+	all_possibilty = length(possible_child_genotype);
+	genotypeFactor.val(j) = (all_possibilty - mismatchNum)/all_possibilty;
+	%genotypesToAlleles(mod(j, genotypeNum))
+end;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
