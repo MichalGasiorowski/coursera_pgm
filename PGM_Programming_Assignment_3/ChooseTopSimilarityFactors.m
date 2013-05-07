@@ -24,6 +24,13 @@ end
 
 % Your code here:
 factors = allFactors; %%% REMOVE THIS LINE
-
+n = length(allFactors);
+best = zeros(n,1);
+for i=1:n	
+	best(i) = allFactors(i).val(1);
+end
+[b, indices] = sort(best,'descend');
+%indices(1:F)
+factors = allFactors(indices(1:F));
 end
 

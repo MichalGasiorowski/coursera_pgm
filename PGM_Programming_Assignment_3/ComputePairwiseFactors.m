@@ -25,7 +25,19 @@ if (n < 2)
 end
 
 factors = repmat(struct('var', [], 'card', [], 'val', []), n - 1, 1);
+factor = struct('var', [], 'card', [], 'val', []);
+factor.card = [K K];
+for i = 1:K
+	for j = 1:K
+		factor.val((j-1)*K + i ) = pairwiseModel(i, j);
+	end
+end
+
+factor.val = factor.val';
+
 
 % Your code here:
-
+for j = 1:n - 1
+	factors(j) = factor;
+	factors(j).var = [j , j + 1 ];
 end

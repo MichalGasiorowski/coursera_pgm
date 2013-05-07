@@ -25,8 +25,22 @@ if (n < 3)
     return
 end
 
+
 factors = repmat(struct('var', [], 'card', [], 'val', []), n - 2, 1);
 
 % Your code here:
+factor = struct('var', [], 'card', [], 'val', []);
+factor.card = [K K K];
+factor.val = ones(K*K*K, 1);
+for i= 1:length(tripletList)
+	ind = AssignmentToIndex([tripletList(i).chars(1) tripletList(i).chars(2) tripletList(i).chars(3)], factor.card);
+	factor.val(ind) = tripletList(i).factorVal;
+end
+
+for j= 1:n - 2
+	factors(j).card = factor.card;
+	factors(j).val = factor.val;
+	factors(j).var = [j, j + 1, j + 2];
+end
 
 end

@@ -24,5 +24,12 @@ n = length(images);
 factors = repmat(struct('var', [], 'card', [], 'val', []), n, 1);
 
 % Your code here:
+models = load('PA3Models.mat');
 
+for j = 1:n
+	q = ComputeImageFactor(images(j).img, models.imageModel);
+	factors(j).var = j;
+	factors(j).card = length(q);
+	factors(j).val = q;
+end
 end
